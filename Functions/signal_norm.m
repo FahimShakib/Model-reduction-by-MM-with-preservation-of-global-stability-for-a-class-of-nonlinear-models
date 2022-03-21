@@ -1,5 +1,5 @@
 %% Description
-% Modified cost function with a penalty function
+% Compute the norm of a signal
 
 % Author: Fahim Shakib
 % Date:   Feb. 22, 2022
