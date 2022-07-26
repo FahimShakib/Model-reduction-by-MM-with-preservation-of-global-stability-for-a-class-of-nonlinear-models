@@ -40,7 +40,7 @@ U = real(U);
 Bd = (U.')\(0.1*sqrt(Ld))/U; 
 
 %% Construct state-space model
-% Retrieve size of x
+% Retrieve size of x (size of number of second order diff. eqns)
 n   = size(M,1);
 
 % Select input location
@@ -340,15 +340,13 @@ end
 Jbar        = max(max(Hinfnorm));
 gammarhou   = norm(sysr(1,1),inf);
 gammarhophi = norm(sysr(1,2),inf);
-gammazu     = norm(sys(2,1),inf);
+gammazphi   = norm(sysr(2,2),inf);
 gammayphi   = norm(sys(1,2),inf);
-gammabar    = 1 + gamma*gammarhou/(1-gammarhophi*gamma)...
-                +gamma^2*gammazu*gammarhou/((1-gammayphi*gamma)*...
-                (1-gammarhophi*gamma));
+gammabar    = (1+gammarhou*gamma/(1-gammarhophi*gamma))*...
+                (1+gammazphi*gamma/(1-gammayphi*gamma));
 nrmU        = signal_norm(u,1);
 
 maxE        = nrmU*Jbar*gammabar;
-maxE        = sqrt(maxE);
 
 figure
 subplot(211)
@@ -389,7 +387,6 @@ end
 
 nrmU_val1       = signal_norm(u_val1,1);
 maxE_val1_nrm   = nrmU_val1*Jbar*gammabar;
-maxE_val1_nrm   = sqrt(maxE_val1_nrm );
 
 [~,z_NL_val1]       = MTF(sys.A,sys.B(:,2),sys.B(:,1),sys.C(1,:),sys.C(2,:),max_iter,tol,1,Tmtf_val1,length(tmtf_val1),u_val1,NLfnc);
 [~,zeta_NL_val1]    = MTF(sysr.A,sysr.B(:,2),sysr.B(:,1),sysr.C(1,:),sysr.C(2,:),max_iter,tol,1,Tmtf_val1,length(tmtf_val1),u_val1,NLfnc);
@@ -421,7 +418,6 @@ end
 
 nrmU_val2     = signal_norm(u_val2,1);
 maxE_val2_nrm = nrmU_val2*Jbar*gammabar;
-maxE_val2_nrm = sqrt(maxE_val2_nrm);
 
 [~,z_NL_val2]       = MTF(sys.A,sys.B(:,2),sys.B(:,1),sys.C(1,:),sys.C(2,:),max_iter,tol,1,Tmtf_val2,length(tmtf_val2),u_val2,NLfnc);
 [~,zeta_NL_val2]    = MTF(sysr.A,sysr.B(:,2),sysr.B(:,1),sysr.C(1,:),sysr.C(2,:),max_iter,tol,1,Tmtf_val2,length(tmtf_val2),u_val2,NLfnc);
